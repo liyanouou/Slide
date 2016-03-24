@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+*{margin:0;padding:0;}
+#container{
+	width:600px;
+	height: 400px;
+	margin:20px auto;
+	position: relative;
+	overflow: hidden;
+}
+#container #list{
+	position: absolute;
+	width:3600px;
+}
+
+#container #list img{
+	/*display: block;*/
+	/*float:left;*/
+	float:left;
+	width:600px;
+}
+#container #buttons{
+	float:left;
+	position: absolute;
+	left:50%;
+	margin-left:-25px;
+	bottom:20px;
+	width:80px;
+	height:10px;
+	border-radius: 10px;
+	background:rgba(255,255,255,0.1);
+	padding:3px;
+}
+#container #buttons span{
+	float:left;
+	display: block;
+	margin-left:5px;
+	width:10px;
+	height:10px;
+	border-radius: 5px;
+	background:rgba(255,255,255,0.4);
+}
+#container #buttons .on{
+	background:orange;
+}
+#container .arrow{
+	text-decoration: none;
+	font-weight: bold;
+	color:#fff;
+	display: block;
+	width:40px;
+	height:40px;
+	font-size: 35px;
+	line-height: 40px;
+	text-align: center;
+	background:rgba(255,255,255,0.2);	
+	display: none;
+}
+#container #prev{
+	position: absolute;
+	left:10px;
+	top:200px;	
+}
+#container #next{
+	position: absolute;
+	right:10px;
+	top: 200px;	
+}
+#container:hover .arrow{
+	display: block;		
+}
+#container .arrow:hover{
+	background:rgba(255,255,255,0.3);
+}
+
+	</style>
+</head>
+<body>
+	<div id="container">
+		<div id="list" style="left:0px">
+			<img src="images/1.jpg" class="pic"/>
+			<img src="images/2.jpg" class="pic"/>
+			<img src="images/3.jpg" class="pic"/>
+			<img src="images/4.jpg" class="pic"/>
+			<img src="images/5.jpg" class="pic"/>
+		</div>
+		<div id="buttons">
+			<span class="on"></span>
+			<span></span>
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+		<a href="#" id="prev" class="arrow">&lt;</a>
+		<a href="#" id="next" class="arrow">&gt;</a>
+	</div>
+	<script type="text/javascript" src="jquery-2.2.2.js"></script>
+
+	<script type="text/javascript">
+	var prev = document.getElementById("prev"),
+		next = document.getElementById("next"),
+		spans = document.getElementById("buttons").getElementsByTagName("span"),
+		list = document.getElementById("list"),
+		container = document.getElementById("container"),
+		cur=0,
+		imgWidth = 600,
+		num = 4;
+	
+	$(list).css('left','-600px');
+	showButton(cur);
+	autoplay();
+
+	$(next).on('click',function(){
+		if( !$(list).is(':animated'))
+			go(-imgWidth,200);
+	});
+
+	$(prev).on('click',function(){
+		$(list).stop(true,true);
+		if(!$(list).is(':animated'))
+			go(imgWidth,200);
+	});
+
+	$(container).on('mouseover',function(){
+		stopAutoPlay();
+	}).on('mouseout',function(){
+		autoplay();
+	});
+
+	$(spans).each(function(index){
+		$(this).on('click',function(){
+			showButton(index);
+			var off = index - cur;
+			if(off > 0){
+				while(off){
+					go(-1,50);
+					off--;
+				}
+			}
+			if(off<0){
+				while(off < 0){
+					go(1,50);
+					off++;
+				}
+			}
+		});
+	});
+
+	function go(offset,speed){
+		if(offset < 0){
+			$(list).animate({left:'-1200px'},speed,function(){
+				var node = $(list).children('.pic').eq(0).remove();
+				$(list).append(node);
+				$(list).css({left:'-600px'});
+				cur += 1;
+				if(cur == 5) cur = 0;
+				showButton(cur);
+			});
+		}
+
+		if(offset > 0){
+			$(list).animate({left:'0px'},speed,function(){
+				var node = $(list).children('.pic').eq(4).remove();
+				$(list).prepend(node);
+				$(list).css({left:'-600px'});
+				cur -= 1;
+				if(cur == -1) cur = 4;
+				showButton(cur);
+			});
+		}			
+	}
+	function showButton(index){
+		$(spans).each(function(){
+			$(this).removeClass('on');
+		});
+		$(spans).eq(index).addClass('on');
+	}
+	function autoplay(){
+		inter = setInterval(function(){
+			go(-imgWidth);
+		},1000);
+	}
+	function stopAutoPlay(){
+		clearInterval(inter);
+	}	
+
+
+if(typeof String.prototype.trim !== 'function'){
+	String.prototype.trim = function(){
+		return this.replace(/^\s+/,"").replace(/\s+$/,"");
+	}
+}
+console.log(" hello world".trim());
+
+	</script>	
+</body>
+</html>
+
+
