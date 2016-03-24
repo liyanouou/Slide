@@ -110,7 +110,7 @@
 		imgWidth = 600,
 		num = 4;
 	
-	$(list).css('left','-600px');
+	$(list).css('left',-imgWidth);
 	showButton(cur);
 	autoplay();
 
@@ -152,10 +152,11 @@
 
 	function go(offset,speed){
 		if(offset < 0){
-			$(list).animate({left:'-1200px'},speed,function(){
+			var pos = -2 * imgWidth;
+			$(list).animate({left:pos},speed,function(){
 				var node = $(list).children('.pic').eq(0).remove();
 				$(list).append(node);
-				$(list).css({left:'-600px'});
+				$(list).css({left:-imgWidth});
 				cur += 1;
 				if(cur == 5) cur = 0;
 				showButton(cur);
@@ -166,7 +167,7 @@
 			$(list).animate({left:'0px'},speed,function(){
 				var node = $(list).children('.pic').eq(4).remove();
 				$(list).prepend(node);
-				$(list).css({left:'-600px'});
+				$(list).css({left:-imgWidth});
 				cur -= 1;
 				if(cur == -1) cur = 4;
 				showButton(cur);
@@ -189,12 +190,6 @@
 	}	
 
 
-if(typeof String.prototype.trim !== 'function'){
-	String.prototype.trim = function(){
-		return this.replace(/^\s+/,"").replace(/\s+$/,"");
-	}
-}
-console.log(" hello world".trim());
 
 	</script>	
 </body>
